@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import loginImage from '../../assets/loginImage.png';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { AppContext } from '@/contexts/AppContext';
 import { POST } from '@/API/axios';
 
@@ -125,6 +125,17 @@ const Login = () => {
               </Button>
             </div>
           </form>
+          <div className="mt-4 text-center">
+          <p className="text-sm">
+            Don't have an account?
+            <Button
+              onClick={() => Navigate('/register')}
+              className="text-main_blue underline ml-1"
+            >
+              Login here
+            </Button>
+          </p>
+        </div>
         </div>
       </div>
     </div>
