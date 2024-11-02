@@ -270,6 +270,17 @@ const Register = () => {
             {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-sm">
+            Already have an account? 
+            <button
+              onClick={() => Navigate('/login')}
+              className="text-main_blue underline ml-1"
+            >
+              Login here
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   )
