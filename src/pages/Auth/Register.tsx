@@ -273,12 +273,12 @@ const Register = () => {
         <div className="mt-4 text-center">
           <p className="text-sm">
             Already have an account? 
-            <button
+            <Button
               onClick={() => Navigate('/login')}
               className="text-main_blue underline ml-1"
             >
               Login here
-            </button>
+            </Button>
           </p>
         </div>
       </div>
