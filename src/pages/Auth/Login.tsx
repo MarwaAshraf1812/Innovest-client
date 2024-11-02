@@ -129,10 +129,10 @@ const Login = () => {
           <p className="text-sm">
             Don't have an account?
             <button
-              onClick={() => Navigate('/register')}
+              onClick={() => navigate('/register')}
               className="text-main_blue underline ml-1"
             >
-              Login here
+              Register here
             </button>
           </p>
         </div>
