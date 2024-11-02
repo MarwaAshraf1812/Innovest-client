@@ -128,12 +128,12 @@ const Login = () => {
           <div className="mt-4 text-center">
           <p className="text-sm">
             Don't have an account?
-            <Button
+            <button
               onClick={() => Navigate('/register')}
               className="text-main_blue underline ml-1"
             >
               Login here
-            </Button>
+            </button>
           </p>
         </div>
         </div>
