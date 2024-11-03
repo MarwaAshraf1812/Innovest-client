@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { registerUser } from '@/API/AuthAPI'
 import { useNavigate } from 'react-router-dom'
 import validator from 'validator'
-import { FormData, FormErrors } from '@/interfaces/RegisterInterfaces'
+import type { FormData, FormErrors } from '@/interfaces/RegisterInterfaces'
 
 const Register = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -16,6 +16,7 @@ const Register = () => {
     username: '',
     country: '',
     national_id: '',
+    profile_image: null,
     id_doc: null,
     role: '',
     password: '',
@@ -25,10 +26,13 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const Navigate = useNavigate();
 
-  const handleFileChange = (e: React.FormEvent) => {
-    const target = e.target as HTMLInputElement
-    setFormData({ ...formData, id_doc: target.files ? target.files[0] : null })
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target
+    if (files && files.length > 0) {
+      setFormData({ ...formData, [name]: files[0] })
+    }
   }
+  
 
   const validateForm = () => {
     const newErrors: Partial<typeof errors> = {};
@@ -50,15 +54,32 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-
+  
     if (!validateForm()) {
       setLoading(false)
       return
     }
 
-    await registerUser(formData)
+    const formDataToSend = new FormData()
+    
+    for (const key in formData) {
+      if (formData[key as keyof typeof formData]) {
+        if (key === 'id_doc' || key === 'profile_image') {
+          if (formData[key as keyof typeof formData] instanceof File) {
+            const fileValue = formData[key as keyof typeof formData];
+            if (fileValue instanceof File) {
+              formDataToSend.append(key, fileValue);
+            }
+          }
+        } else {
+          formDataToSend.append(key, formData[key as keyof typeof formData] as string)
+        }
+      }
+    }
+    await registerUser(formDataToSend)
     Navigate('/login')
   }
+  
 
   return (
     <div className="flex h-screen">
@@ -234,7 +255,7 @@ const Register = () => {
               </label>
               <select
                 id="role"
-                value={formData.role}
+                value={formData.role.toLowerCase() }
                 onChange={(e) => setFormData({ ...formData, role: e.target.value.toUpperCase() })}
                 className="w-full border rounded px-2 py-1"
               >
@@ -255,11 +276,28 @@ const Register = () => {
               <Input
                 id="id_doc"
                 type="file"
+                name="id_doc"
                 onChange={handleFileChange}
                 className="w-full"
               />
               {errors.id_doc && <p className="text-red-500 text-sm">{errors.id_doc}</p>}
             </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="profile_image"
+                className="text-sm font-medium mb-2"
+              >
+                Profile Image
+              </label>
+              <Input
+                id="profile_image"
+                name="profile_image"
+                type="file"
+                onChange={handleFileChange}
+                className="w-full"
+              />
+              {errors.id_doc && <p className="text-red-500 text-sm">{errors.profile_image}</p>}
+          </div>
           </div>
 
           <Button

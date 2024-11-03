@@ -30,12 +30,12 @@ const Login = () => {
   const navigate = useNavigate()
 
   const validateForm = () => {
-    const newErrors: FormErrors = { username_or_email: '', password: '' }
-    if (!formData.username_or_email) newErrors.username_or_email = 'Username or email is required'
-    if (!formData.password) newErrors.password = 'Password is required'
-
+    const newErrors: FormErrors = {
+      username_or_email: formData.username_or_email ? '' : 'Username or email is required',
+      password: formData.password ? '' : 'Password is required',
+    }
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return !Object.values(newErrors).some(error => error)
   }
 
   const handleSubmit = async (e: React.FormEvent, endpointType: string) => {
@@ -43,40 +43,41 @@ const Login = () => {
     if (!validateForm()) return
 
     setLoading(true)
+    setErrors({ username_or_email: '', password: '' })
 
     try {
       const response = await POST(`/${endpointType}/login`, formData)
-      setUser(response.data.user)
+      if (!response.user) throw new Error('User data not found in response')
 
-      switch (response.data.user.role) {
-        case 'ADMIN':
-        case 'SUPER_ADMIN':
-          navigate('/admin-dashboard')
-          break
-        case 'ENTREPRENEUR':
-          navigate('/entrepreneur-dashboard')
-          break
-        case 'INVESTOR':
-          navigate('/investor-dashboard')
-          break
-        default:
-          navigate('/user-dashboard')
-      }
+      setUser(response.user)
+      const targetPath = getTargetPath(response.user.role)
+      navigate(targetPath)
+      
     } catch (error) {
-      setErrors({ username_or_email: 'Login failed. Please try again.', password: '' })
+      console.error('Login error:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const getTargetPath = (role: string) => {
+    switch (role) {
+      case 'ADMIN':
+      case 'SUPER_ADMIN':
+        return '/admin-dashboard'
+      case 'ENTREPRENEUR':
+        return '/entrepreneur-dashboard'
+      case 'INVESTOR':
+        return '/investor-dashboard'
+      default:
+        return '/login'
     }
   }
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="flex-1 flex items-center justify-center bg-gray-200 h-full">
-        <img
-          src={loginImage}
-          alt="login"
-          className="w-full h-full object-cover"
-        />
+        <img src={loginImage} alt="login" className="w-full h-full object-cover" />
       </div>
 
       <div className="flex-1 flex items-center justify-center bg-white">
@@ -84,10 +85,7 @@ const Login = () => {
           <h1 className="text-3xl font-bold mb-6 text-center">Welcome Back!</h1>
           <form className="space-y-4">
             <div className="flex flex-col">
-              <label
-                htmlFor="username_or_email"
-                className="text-sm font-medium mb-4"
-              >
+              <label htmlFor="username_or_email" className="text-sm font-medium mb-4">
                 Username or Email
               </label>
               <Input
@@ -103,10 +101,7 @@ const Login = () => {
               )}
             </div>
             <div className="flex flex-col">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium mb-4"
-              >
+              <label htmlFor="password" className="text-sm font-medium mb-4">
                 Password
               </label>
               <Input
@@ -141,18 +136,12 @@ const Login = () => {
           <div className="mt-4 text-center">
             <p className="text-sm">
               Don't have an account?
-              <button
-                onClick={() => navigate('/register')}
-                className="text-main_blue underline ml-1"
-              >
+              <button onClick={() => navigate('/register')} className="text-main_blue underline ml-1">
                 Register here
               </button>
             </p>
             <p className="text-sm mt-2">
-              <button
-                onClick={() => navigate('/forgot-password')}
-                className="text-main_blue underline"
-              >
+              <button onClick={() => navigate('/forgot-password')} className="text-main_blue underline">
                 Forgot Password?
               </button>
             </p>

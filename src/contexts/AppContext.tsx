@@ -1,10 +1,8 @@
 import { useEffect, useState, createContext, ReactNode } from "react";
 import { autoLogin } from "@/API/AuthAPI";
 
-type UUID = string;
-
 interface User {
-  id: UUID;
+  id: string;
   first_name?: string;
   last_name?: string;
   email?: string;
@@ -29,15 +27,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const saveUser = async () => {
-    const user = await autoLogin();
-    setUser(user);
+    try {
+      const response = await autoLogin();
+      setUser(response); 
+    } catch (error) {
+      console.error("Error in autoLogin:", error);
+    }
   };
+  
 
   useEffect(() => {
     if (!user) {
       saveUser();
     }
-  }, [user]);
+  }, []);
 
   return (
     <AppContext.Provider value={{ user, setUser }}>
