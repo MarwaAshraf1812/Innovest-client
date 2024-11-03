@@ -6,7 +6,8 @@ export interface FormData {
   username: string;
   country: string;
   national_id: string;
-  id_doc: File | null;
+  id_doc: FileList | null;
+  profile_image: FileList | null;
   role: string;
   password: string;
 }
@@ -21,5 +22,6 @@ export interface FormErrors {
   national_id?: string;
   role?: string;
   password?: string;
+  profile_image?: string;
   id_doc?: string;
 }
