@@ -1,50 +1,87 @@
 import { useEffect, useState, createContext, ReactNode } from "react";
 import { autoLogin } from "@/API/AuthAPI";
+import { GET } from "@/API/axios";
 
 interface User {
   id: string;
   first_name?: string;
   last_name?: string;
   email?: string;
+  profile_image?: string;
   phone?: string;
   username: string;
   country?: string;
   national_id?: string;
   role: 'ADMIN' | 'SUPER_ADMIN' | 'INVESTOR' | 'ENTREPRENEUR';
+  isLoading: boolean;
+}
+
+interface UserData {
+  profile_image?: string;
+  username?: string;
+  country?: string;
 }
 
 interface AppContextType {
   user: User | null;
   setUser: (user: User | null) => void;
+  userData: UserData;
+  isLoading: boolean;
 }
 
 export const AppContext = createContext<AppContextType>({
   user: null,
-  setUser: () => {}
+  setUser: () => {},
+  userData: {},
+  isLoading: false
 });
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchUserData = async () => {
+    if (user) {
+      setIsLoading(true);
+      try {
+        let response: UserData = {};
+        if (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') {
+          response = await GET(`/admin/${user.id}`);
+        } else if (user.role === 'ENTREPRENEUR' || user.role === 'INVESTOR') {
+          response = await GET(`/user/${user.id}`);
+        }
+        setUserData(response);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [user]);
 
   const saveUser = async () => {
     try {
       const response = await autoLogin();
-      setUser(response); 
+      setUser(response);
     } catch (error) {
       console.error("Error in autoLogin:", error);
     }
   };
-  
 
   useEffect(() => {
     if (!user) {
       saveUser();
     }
-  }, []);
+  }, [user]);
 
   return (
-    <AppContext.Provider value={{ user, setUser }}>
+    <AppContext.Provider value={{ user, setUser, userData, isLoading }}>
       {children}
     </AppContext.Provider>
   );
-}
+};
