@@ -6,10 +6,15 @@ import PublicRoutes from '@/components/PublicRoutes'
 import ProtectedRoutes from '@/components/ProtectedRoutes'
 import ForgotPassword from '@/pages/Auth/ForgotPasswoed'
 import ResetPassword from '@/pages/Auth/ResetPassword'
-import EntrepreneurDashboard from '@/components/dashboards/EntrepreneurDashboard'
-import AdminDashboard from '@/components/dashboards/AdminDashboard'
-import InvestorDashboard from '@/components/dashboards/InvestorDashboard'
 import { AppProvider } from '@/contexts/AppContext'
+import DashboardLayout from '@/components/layouts/DashboardLayout'
+import InvestorDashboard from '@/pages/InvestorDashboard/Dashboard'
+import EntrepreneurDashboard from '@/pages/EntrepreneurDashboard/Dashboard'
+import AdminDashboard from '@/pages/AdminDashboard/Dashboard'
+import Admins from '@/pages/AdminDashboard/Admins'
+import Communities from '@/pages/AdminDashboard/Communities'
+import Members from '@/pages/AdminDashboard/Members'
+import { Settings } from 'lucide-react'
 
 const Router = createBrowserRouter([
   {
@@ -49,28 +54,42 @@ const Router = createBrowserRouter([
     ),
   },
   {
-    path: '/entrepreneur-dashboard',
+    path: '/admin-dashboard/*',
     element: (
       <ProtectedRoutes>
-        <EntrepreneurDashboard />
+        <DashboardLayout />
       </ProtectedRoutes>
     ),
+    children: [
+      { path: '', element: <AdminDashboard /> },
+      { path: 'admins', element: <Admins /> },
+      { path: 'communities', element: <Communities /> },
+      { path: 'members', element: <Members /> },
+      { path: 'settings', element: <Settings /> },
+
+    ],
   },
   {
-    path: '/admin-dashboard',
+    path: '/entrepreneur-dashboard/*',
     element: (
       <ProtectedRoutes>
-        <AdminDashboard />
+        <DashboardLayout />
       </ProtectedRoutes>
     ),
+    children: [
+      { path: '', element: <EntrepreneurDashboard /> },
+    ],
   },
   {
-    path: '/investor-dashboard',
+    path: '/investor-dashboard/*',
     element: (
       <ProtectedRoutes>
-        <InvestorDashboard />
+        <DashboardLayout />
       </ProtectedRoutes>
     ),
+    children: [
+      { path: '', element: <InvestorDashboard /> },
+    ],
   },
   {
     path: '*',
