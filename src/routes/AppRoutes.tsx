@@ -15,6 +15,7 @@ import Admins from '@/pages/AdminDashboard/Admins'
 import Communities from '@/pages/AdminDashboard/Communities'
 import Members from '@/pages/AdminDashboard/Members'
 import { Settings } from 'lucide-react'
+import ProfilePage from '@/pages/AdminDashboard/ProfilePage'
 
 const Router = createBrowserRouter([
   {
@@ -64,6 +65,7 @@ const Router = createBrowserRouter([
       { path: '', element: <AdminDashboard /> },
       { path: 'admins', element: <Admins /> },
       { path: 'communities', element: <Communities /> },
+      { path: 'profile', element: <ProfilePage /> },
       { path: 'members', element: <Members /> },
       { path: 'settings', element: <Settings /> },
 

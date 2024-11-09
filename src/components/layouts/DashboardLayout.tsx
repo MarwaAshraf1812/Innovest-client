@@ -23,6 +23,20 @@ const DashboardLayout: React.FC = () => {
         return 'ADMIN'
     }
   }
+  
+  const getHeaderType = () => {
+    switch (role) {
+      case 'ADMIN':
+      case 'SUPER_ADMIN':
+        return 'admin'
+      case 'ENTREPRENEUR':
+        return  'entrepreneur'
+      case 'INVESTOR':
+        return 'investor'
+      default:
+        return 'ADMIN'
+    }
+  }
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -42,7 +56,7 @@ const DashboardLayout: React.FC = () => {
             >
               <AiOutlineMenu className="text-2xl" />
             </button>
-            <DashboardHeader />
+            <DashboardHeader type={getHeaderType()} />
           </div>
           <Outlet />
         </div>

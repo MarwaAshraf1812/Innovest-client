@@ -1,6 +1,7 @@
 import { useEffect, useState, createContext, ReactNode } from "react";
 import { autoLogin } from "@/API/AuthAPI";
 import { GET } from "@/API/axios";
+import { updateProfile } from "@/API/api";
 
 interface User {
   id: string;
@@ -14,12 +15,21 @@ interface User {
   national_id?: string;
   role: 'ADMIN' | 'SUPER_ADMIN' | 'INVESTOR' | 'ENTREPRENEUR';
   isLoading: boolean;
+ 
 }
 
 interface UserData {
-  profile_image?: string;
+  admin_id?: string;
+  first_name?: string;
+  last_name?: string;
   username?: string;
+  email?: string;
+  profile_image?: string;
+  phone?: string;
   country?: string;
+  role?: string;
+  permissions?: string[];
+  communities?: any[];
 }
 
 interface AppContextType {
@@ -27,18 +37,28 @@ interface AppContextType {
   setUser: (user: User | null) => void;
   userData: UserData;
   isLoading: boolean;
+  updateUserData: (updatedData: UserData) => void;
+  isEditing: boolean;
+  handleEdit: () => void;
+  setIsEditing: (isEditing: boolean) => void;
 }
 
 export const AppContext = createContext<AppContextType>({
   user: null,
   setUser: () => {},
   userData: {},
-  isLoading: false
+  isLoading: false,
+  isEditing: false,
+  setIsEditing: () => {},
+  updateUserData: () => {},
+  handleEdit: () => {},
 });
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData>({});
+  const [isEditing, setIsEditing] = useState(false);
+  console.log('userData:', userData);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserData = async () => {
@@ -64,6 +84,24 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     fetchUserData();
   }, [user]);
 
+  const updateUserData = async (updatedData: any) => {
+        try {
+          if (user?.id && user?.role) {
+            const response = await updateProfile(user.id, updatedData, user.role);
+            setUserData(response);
+            return response;
+          } else {
+            throw new Error("User ID or role is undefined");
+          }
+        } catch (error) {
+          console.error('Failed to update user data:', error);
+        }
+      };
+
+      const handleEdit = () => {
+        setIsEditing(true);
+      }
+
   const saveUser = async () => {
     try {
       const response = await autoLogin();
@@ -80,7 +118,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <AppContext.Provider value={{ user, setUser, userData, isLoading }}>
+    <AppContext.Provider value={{ user, setUser, userData, isLoading, updateUserData, isEditing, setIsEditing, handleEdit}}>
       {children}
     </AppContext.Provider>
   );
