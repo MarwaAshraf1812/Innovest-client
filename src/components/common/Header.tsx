@@ -4,24 +4,27 @@ import { AiOutlineBell } from 'react-icons/ai'
 import { ImSpinner2 } from 'react-icons/im'
 import { FaUserPlus, FaUsers, FaChevronDown } from 'react-icons/fa'
 import { GET } from '@/API/axios'
+import { useNavigate } from 'react-router-dom'
 
 const defaultAvatar =
   'https://img.freepik.com/free-photo/3d-rendering-zoom-call-avatar_23-2149556787.jpg?uid=R91937016&ga=GA1.1.794671374.1730731320&semt=ais_hybrid'
 
-const DashboardHeader: React.FC = () => {
-  const { userData, isLoading } = useContext(AppContext)
-  
+interface DashboardHeaderProps {
+  type: string;
+}
+
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ type }) => {
+  const { userData, isLoading, handleEdit } = useContext(AppContext)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
-
   const notifications = [
     { id: 1, message: 'New registration request', icon: <FaUserPlus className="text-green-500" /> },
     { id: 2, message: 'New user joined your community', icon: <FaUsers className="text-blue-500" /> },
     { id: 3, message: 'New comment on your post', icon: <FaUsers className="text-orange-500" /> },
   ]
-
   const dropdownRef = useRef<HTMLDivElement | null>(null)
   const profileDropdownRef = useRef<HTMLDivElement | null>(null)
+  const navigate = useNavigate()
 
   const toggleDropdown = (type: 'notification' | 'profile') => {
     if (type === 'notification') {
@@ -33,26 +36,13 @@ const DashboardHeader: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(event.target as Node)
-      const isOutsideProfileDropdown = profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)
-
-      if (isOutsideDropdown || isOutsideProfileDropdown) {
-        setIsDropdownOpen(false)
-        setIsProfileDropdownOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
-
   const handleLogout = async () => {
     await GET('/admin/logout')
     window.location.href = '/login'
+  }
+
+  const handleProfileClick = () => {
+    navigate(`/${type}-dashboard/profile`)
   }
 
   return (
@@ -101,13 +91,9 @@ const DashboardHeader: React.FC = () => {
               {isProfileDropdownOpen && (
                 <div ref={profileDropdownRef} className="absolute right-0 mt-32 w-[150px] bg-white text-gray-900 rounded-md shadow-lg z-20">
                   <ul>
-                    <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Profile</li>
-                    <li 
-                      className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </li>
+                    <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={handleProfileClick}>Profile</li>
+                    <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={handleEdit}>Edit Profile</li>
+                    <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer" onClick={handleLogout}>Logout</li>
                   </ul>
                 </div>
               )}
