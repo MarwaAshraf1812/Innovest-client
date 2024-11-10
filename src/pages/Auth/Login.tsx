@@ -35,7 +35,7 @@ const Login = () => {
       password: formData.password ? '' : 'Password is required',
     }
     setErrors(newErrors)
-    return !Object.values(newErrors).some(error => error)
+    return !Object.values(newErrors).some((error) => error)
   }
 
   const handleSubmit = async (e: React.FormEvent, endpointType: string) => {
@@ -50,9 +50,9 @@ const Login = () => {
       if (!response.user) throw new Error('User data not found in response')
 
       setUser(response.user)
+      console.log(response.user)
       const targetPath = getTargetPath(response.user.role)
       navigate(targetPath)
-      
     } catch (error) {
       console.error('Login error:', error)
     } finally {
@@ -77,7 +77,11 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="flex-1 flex items-center justify-center bg-gray-200 h-full">
-        <img src={loginImage} alt="login" className="w-full h-full object-cover" />
+        <img
+          src={loginImage}
+          alt="login"
+          className="w-full h-full object-cover"
+        />
       </div>
 
       <div className="flex-1 flex items-center justify-center bg-white">
@@ -85,7 +89,10 @@ const Login = () => {
           <h1 className="text-3xl font-bold mb-6 text-center">Welcome Back!</h1>
           <form className="space-y-4">
             <div className="flex flex-col">
-              <label htmlFor="username_or_email" className="text-sm font-medium mb-4">
+              <label
+                htmlFor="username_or_email"
+                className="text-sm font-medium mb-4"
+              >
                 Username or Email
               </label>
               <Input
@@ -101,7 +108,10 @@ const Login = () => {
               )}
             </div>
             <div className="flex flex-col">
-              <label htmlFor="password" className="text-sm font-medium mb-4">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium mb-4"
+              >
                 Password
               </label>
               <Input
@@ -136,12 +146,18 @@ const Login = () => {
           <div className="mt-4 text-center">
             <p className="text-sm">
               Don't have an account?
-              <button onClick={() => navigate('/register')} className="text-main_blue underline ml-1">
+              <button
+                onClick={() => navigate('/register')}
+                className="text-main_blue underline ml-1"
+              >
                 Register here
               </button>
             </p>
             <p className="text-sm mt-2">
-              <button onClick={() => navigate('/forgot-password')} className="text-main_blue underline">
+              <button
+                onClick={() => navigate('/forgot-password')}
+                className="text-main_blue underline"
+              >
                 Forgot Password?
               </button>
             </p>

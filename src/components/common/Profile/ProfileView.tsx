@@ -1,44 +1,44 @@
-import React, { useContext, useState } from 'react';
-import { AppContext } from '@/contexts/AppContext';
-import { ImSpinner2 } from 'react-icons/im';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import ConfirmModal from '../ConfirmModal/ConfirmModal';
+import React, { useContext, useState } from 'react'
+import { AppContext } from '@/contexts/AppContext'
+import { ImSpinner2 } from 'react-icons/im'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import ConfirmModal from '../ConfirmModal/ConfirmModal'
 
 interface ProfileViewProps {
-  onEdit: () => void;
+  onEdit: () => void
 }
 
 const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
-  const { userData, user, isLoading } = useContext(AppContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { userData, user, isLoading } = useContext(AppContext)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  if (isLoading) return <ImSpinner2 className="animate-spin text-2xl" />;
+  if (isLoading) return <ImSpinner2 className="animate-spin text-2xl" />
 
   const handleDeleteConfirm = async () => {
     try {
       if (user?.id && user?.role) {
         // await deleteProfile(user.id, user.role);
-        toast.success("Profile deleted successfully");
-        setIsModalOpen(false);
+        toast.success('Profile deleted successfully')
+        setIsModalOpen(false)
       }
     } catch (error) {
-      console.error("Failed to delete profile:", error);
-      toast.error("Failed to delete profile. Please try again.");
+      console.error('Failed to delete profile:', error)
+      toast.error('Failed to delete profile. Please try again.')
     }
-  };
+  }
 
   return (
-    <div className="flex justify-center py-10">
-      <div className="bg-white shadow-2xl rounded-lg w-full max-w-6xl p-8 border border-gray-300">
-        <div className="flex justify-center mb-6">
+    <div className="flex justify-start py-10 w-full">
+      <div className="bg-white shadow-md rounded-lg w-full p-8 border border-gray-300">
+        <div className="flex justify-start mb-6">
           <img
             src={userData?.profile_image || 'https://i.ibb.co/6WtQfMm/default.png'}
             alt="Profile"
             className="w-40 h-40 rounded-full object-cover border-4 border-blue-500"
           />
         </div>
-        <div className="text-center mb-8">
+        <div className="text-left mb-8">
           <h2 className="text-3xl font-extrabold text-gray-800 mb-2">
             {userData?.username || `${userData?.first_name || ''} ${userData?.last_name || ''}`}
           </h2>
@@ -73,7 +73,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
             </div>
           )}
         </div>
-        <div className="flex justify-end gap-4 mt-6">
+        <div className="flex justify-start gap-4 mt-6">
           <button
             className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-semibold shadow-md"
             onClick={onEdit}
@@ -97,7 +97,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
         onClose={() => setIsModalOpen(false)}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ProfileView;
+export default ProfileView

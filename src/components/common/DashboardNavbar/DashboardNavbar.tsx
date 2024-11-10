@@ -13,6 +13,7 @@ import {
   FaLightbulb,
   FaTimes,
 } from 'react-icons/fa'
+import DashboardNavbarItem from './DashboardNavbarItem'
 
 interface DashboardNavbarProps {
   dashboardType: 'ADMIN' | 'SUPER_ADMIN' | 'ENTREPRENEUR' | 'INVESTOR'
@@ -21,7 +22,12 @@ interface DashboardNavbarProps {
   setIsOpen: (value: boolean) => void
 }
 
-const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ dashboardType, activePath, isOpen, setIsOpen }) => {
+const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
+  dashboardType,
+  activePath,
+  isOpen,
+  setIsOpen,
+}) => {
   const menuItems = {
     ADMIN: [
       { name: 'Dashboard', path: '/admin-dashboard', icon: <FaTachometerAlt /> },
@@ -68,16 +74,13 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ dashboardType, active
       <h2 className="text-2xl font-bold mb-6 capitalize">{dashboardType}</h2>
       <div className="flex flex-col space-y-2">
         {menuItems[dashboardType].map((item) => (
-          <NavLink
+          <DashboardNavbarItem
             key={item.name}
-            to={item.path}
-            className={`flex items-center space-x-2 p-2 rounded hover:bg-white hover:text-main_blue ${
-              activePath === item.path ? 'bg-white text-main_blue' : ''
-            }`}
-          >
-            {item.icon}
-            <span>{item.name}</span>
-          </NavLink>
+            path={item.path}
+           
+            icon={item.icon}
+            name={item.name}
+          />
         ))}
       </div>
     </div>
