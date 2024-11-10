@@ -80,6 +80,7 @@ const Router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <EntrepreneurDashboard /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
   {
@@ -91,6 +92,7 @@ const Router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <InvestorDashboard /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
   {
