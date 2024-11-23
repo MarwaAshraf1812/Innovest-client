@@ -28,8 +28,21 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
     }
   }
 
+  const renderChipList = (items: string[], color: string) => (
+    <div className="flex flex-wrap gap-2">
+      {items.map((item, index) => (
+        <span
+          key={index}
+          className={`px-3 py-1 text-sm font-semibold text-white rounded-full ${color}`}
+        >
+          {item}
+        </span>
+      ))}
+    </div>
+  )
+
   return (
-    <div className="flex justify-start py-10 w-full">
+    <div className="flex justify-start py-2 w-full">
       <div className="bg-white shadow-md rounded-lg w-full p-8 border border-gray-300">
         <div className="flex justify-start mb-6">
           <img
@@ -50,16 +63,12 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
               <p className="font-semibold text-lg">Admin Role: {userData?.role}</p>
               <div className="mt-4">
                 <p className="font-semibold mb-2">Permissions:</p>
-                <div className="flex flex-wrap gap-2">
-                  {userData?.permissions?.map((permission, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full shadow-sm"
-                    >
-                      {permission.replace(/_/g, ' ').toLowerCase()}
-                    </span>
-                  ))}
-                </div>
+                {renderChipList(
+                  userData?.permissions?.map((permission) =>
+                    permission.replace(/_/g, ' ').toLowerCase()
+                  ) || [],
+                  'bg-blue-500'
+                )}
               </div>
             </div>
           ) : (
@@ -70,9 +79,36 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
               <p className="mt-1">
                 <span className="font-semibold">Country:</span> {userData?.country || 'N/A'}
               </p>
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-4">Investment Preferences:</h3>
+                {userData?.investment_preferences?.length ? (
+                  renderChipList(userData.investment_preferences, 'bg-indigo-500')
+                ) : (
+                  <p className="text-gray-500">No preferences added.</p>
+                )}
+              </div>
+
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-4">User Languages:</h3>
+                {userData?.user_languages?.length ? (
+                  renderChipList(userData.user_languages, 'bg-teal-500')
+                ) : (
+                  <p className="text-gray-500">No languages added.</p>
+                )}
+              </div>
+
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-4">User Interests:</h3>
+                {userData?.user_interests?.length ? (
+                  renderChipList(userData.user_interests, 'bg-purple-500')
+                ) : (
+                  <p className="text-gray-500">No interests added.</p>
+                )}
+              </div>
             </div>
           )}
         </div>
+
         <div className="flex justify-start gap-4 mt-6">
           <button
             className="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md font-semibold shadow-md"
@@ -88,7 +124,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onEdit }) => {
           </button>
         </div>
       </div>
-
       <ConfirmModal
         title="Confirm Deletion"
         message="Are you sure you want to delete this profile? This action cannot be undone."

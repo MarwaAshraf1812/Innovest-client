@@ -27,6 +27,9 @@ export interface UserProfile {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  investment_preferences ?: string[]
+  user_languages ?: string[]
+  user_interests ?: string[]
 }
 
 export type Profile = AdminProfile | UserProfile;
