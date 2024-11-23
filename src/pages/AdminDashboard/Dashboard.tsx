@@ -5,9 +5,12 @@ import OverviewCard from '@/components/common/OverviewCard/OverviewCard'
 import { FaChartBar, FaUsers, FaUserPlus } from 'react-icons/fa'
 import Sidebar from '@/components/common/Sidebar/Sidebar'
 import { HiChevronDown } from 'react-icons/hi'
+import Table from '@/components/common/Table/Table'
+import { useUsers } from '@/hooks/useUsers'
 
 const AdminDashboard: React.FC = () => {
   const { userData } = useContext(AppContext)
+  const { users, loading } = useUsers()
 
   return (
     <div className="flex flex-col flex-1 mt-2 h-full">
@@ -58,7 +61,28 @@ const AdminDashboard: React.FC = () => {
               percentage="50/100"
             />
           </div>
-          <div className="grid grid-col-3"></div>
+          <div className="grid grid-col-3 mt-3">
+            <div className="flex items-center justify-between my-4">
+              <h6 className="text-lg font-semibold text-main_blue">Recent activity</h6>
+              <div className="flex items-center space-x-2">
+                <p className="text-gray-600">Last 1 day</p>
+                <HiChevronDown
+                  className="text-gray-600 cursor-pointer"
+                  size={20}
+                />
+              </div>
+            </div>
+            <Table
+              columns={[
+                { label: 'Username', field: 'username' },
+                { label: 'Email', field: 'email' },
+                { label: 'Role', field: 'role' },
+              ]}
+              data={users}
+              loading={loading}
+              rowKey="id"
+            />
+          </div>
         </div>
         <div className="col-span-12 lg:col-span-3 h-full">
           <Sidebar />
