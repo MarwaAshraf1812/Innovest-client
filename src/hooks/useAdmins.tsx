@@ -1,4 +1,4 @@
-import { DELETE, GET, PUT } from "@/API/axios";
+import { DELETE, GET, POST, PUT } from "@/API/axios";
 import { useEffect, useState } from "react";
 
 interface Admin {
@@ -29,6 +29,19 @@ const useAdmins = () => {
       setAdmins(response);
     } catch (err: any) {
       setError('Failed to fetch admins');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+  const createAdmin = async (data: Record<string, any>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await POST('/admin', data);
+      setAdmins([...admins, response]);
+    } catch (err: any) {
+      setError('Failed to create admin');
       console.error(err);
     } finally {
       setLoading(false);
@@ -74,6 +87,7 @@ const useAdmins = () => {
     loading,
     error,
     fetchAdmins,
+    createAdmin,
     updateAdminById,
     deleteAdminById
   }

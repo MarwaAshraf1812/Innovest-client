@@ -22,7 +22,7 @@ export async function POST(url: string, data: {}) {
   }
 }
 
-export async function PUT(url: string, data: {}) {
+export async function PUT(url: string, data?: {}) {
   try {
     const response = await axios.put(DOMAIN + url, data, { withCredentials: true });
     return response.data;
