@@ -71,6 +71,39 @@ export const useUsers = () => {
     }
   }
 
+
+  const approveUserById = async (id: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      await PUT(`/user/approve-user/${id}`)
+      setUsers(prevUsers => 
+        prevUsers.map(user => (user.id === id ? { ...user, is_verified: true } : user))
+      )
+    } catch (err: any) {
+      setError('Failed to approve user')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const rejectUserById = async (id: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      await PUT(`/user/reject-user/${id}`)
+      setUsers(prevUsers => 
+        prevUsers.map(user => (user.id === id ? { ...user, is_verified: false } : user))
+      )
+    } catch (err: any) {
+      setError('Failed to reject user')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     fetchUsers()
   }, [])
@@ -82,5 +115,7 @@ export const useUsers = () => {
     fetchUsers,
     updateUserById,
     deleteUserById,
+    approveUserById,
+    rejectUserById
   }
 }

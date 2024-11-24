@@ -44,8 +44,14 @@ interface AppContextType {
   isLoading: boolean
   updateUserData: (updatedData: UserData) => void
   isEditing: boolean
+  isAdding: boolean
+  setIsAdding: (isAdding: boolean) => void
+  selectedRow?: any
+  setSelectedRow?: (selectedRow: any) => void
   handleEdit: () => void
   setIsEditing: (isEditing: boolean) => void
+  isModerating: boolean
+  setIsModerating: (isModerating: boolean) => void
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -54,15 +60,24 @@ export const AppContext = createContext<AppContextType>({
   userData: {},
   isLoading: false,
   isEditing: false,
+  isAdding: false,
+  setIsAdding: () => {},
   setIsEditing: () => {},
   updateUserData: () => {},
   handleEdit: () => {},
+  selectedRow: {},
+  setSelectedRow: () => {},
+  isModerating: false,
+  setIsModerating: () => {},
 })
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [userData, setUserData] = useState<UserData>({})
   const [isEditing, setIsEditing] = useState(false)
+  const [isAdding, setIsAdding] = useState(false)
+  const [isModerating, setIsModerating] = useState(false)
+  const [selectedRow, setSelectedRow] = useState<any>({})
   console.log('userData:', userData)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -130,10 +145,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setUser,
         userData,
         isLoading,
+        isAdding,
+        setIsAdding,
         updateUserData,
         isEditing,
         setIsEditing,
         handleEdit,
+        selectedRow,
+        setSelectedRow,
+        isModerating,
+        setIsModerating
       }}
     >
       {children}
