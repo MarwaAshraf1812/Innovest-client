@@ -21,6 +21,7 @@ const Login = () => {
     username_or_email: '',
     password: '',
   })
+  console.log(formData)
   const { setUser } = useContext(AppContext)
   const [errors, setErrors] = useState<FormErrors>({
     username_or_email: '',

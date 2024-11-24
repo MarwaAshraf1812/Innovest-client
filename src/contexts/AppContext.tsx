@@ -14,6 +14,9 @@ interface User {
   username: string
   country?: string
   national_id?: string
+  investment_preferences ?: string[]
+  user_languages ?: string[]
+  user_interests ?: string[]
   role: 'ADMIN' | 'SUPER_ADMIN' | 'INVESTOR' | 'ENTREPRENEUR'
 }
 
@@ -29,6 +32,9 @@ interface UserData {
   role?: string
   permissions?: string[]
   communities?: any[]
+  investment_preferences ?: string[]
+  user_languages ?: string[]
+  user_interests ?: string[]
 }
 
 interface AppContextType {
