@@ -32,7 +32,7 @@ const Projects = () => {
               </Switch>
             </div>
             <p className="text-gray-700">{project.description}</p>
-            <Link to={`/projects/${project._id}`}>
+            <Link to={`${project._id}`}>
               <Button className="mt-4 bg-main_blue text-white hover:text-main_blue hover:border-main_blue hover:bg-white">
                 View Details
               </Button>
