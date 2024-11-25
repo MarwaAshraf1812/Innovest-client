@@ -1,15 +1,14 @@
 import {
   Select,
   SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
-} from '@radix-ui/react-select'
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { FaTimes } from 'react-icons/fa'
 import React, { useState } from 'react'
-import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 const ProjectForm = ({ onClose }: { onClose: () => void }) => {
   const [projectData, setProjectData] = useState({
@@ -201,7 +200,6 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
               className="mt-1 flex items-center justify-between border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <SelectValue placeholder="Select visibility" />
-              <ChevronDownIcon className="ml-2 text-gray-500" />
             </SelectTrigger>
             <SelectContent className="bg-white border border-gray-300 rounded-md shadow-lg mt-0">
               <SelectItem
