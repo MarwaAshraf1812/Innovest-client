@@ -18,7 +18,7 @@ const ProfilePage = () => {
   return (
     <div>
       { isEditing ? (
-        <div className="bg-white shadow-2xl rounded-lg w-full max-w-6xl p-8 border border-gray-300
+        <div className="bg-white shadow-2xl mt-4 rounded-lg w-full max-w-8xl p-8 border border-gray-300
         ">
           <div className="edit form">
           <DynamicForm 

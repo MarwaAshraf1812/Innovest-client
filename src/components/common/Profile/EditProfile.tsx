@@ -78,7 +78,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ onSubmit, onCancel }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="dynamic-form space-y-4">
+    <form onSubmit={handleSubmit} className="dynamic-form space-y-6">
       {!isAdmin && (
         <>
           <label>
