@@ -1,39 +1,38 @@
-import { DELETE, GET, POST, PUT } from "@/API/axios";
-import { useEffect, useState } from "react";
+import { DELETE, GET, POST, PUT } from '@/API/axios'
+import { useEffect, useState } from 'react'
 
 export interface Community {
-  community_id: string;
-  community_name: string;
-  description: string;
-  image_url: string;
-  admins: string[];
-  member_count: number;
-  page_count: number;
-  tags: string[];
-  pages: any[];
-  users: any[];
-  createdAt: string;
-  updatedAt: string;
+  community_id: string
+  community_name: string
+  description: string
+  image_url: string
+  admins: string[]
+  member_count: number
+  page_count: number
+  tags: string[]
+  pages: any[]
+  users: any[]
+  createdAt: string
+  updatedAt: string
 }
 
-
 const useCommunity = () => {
-  const [communities, setCommunities] = useState<Community[]>([]);
-  const [pendingPages, setPendingPages] = useState<Community[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [communities, setCommunities] = useState<Community[]>([])
+  const [pendingPages, setPendingPages] = useState<Community[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchCommunities = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const response = await GET('/community');
-      setCommunities(response.communities);
+      const response = await GET('/community')
+      setCommunities(response.communities)
     } catch (err: any) {
-      setError('Failed to fetch communities');
-      console.error(err);
+      setError('Failed to fetch communities')
+      console.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -52,16 +51,16 @@ const useCommunity = () => {
   }
 
   const createCommunity = async (data: any) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const response = await POST('/community', data);
-      setCommunities([...communities, response]);
+      const response = await POST('/community', data)
+      setCommunities([...communities, response])
     } catch (err: any) {
-      setError('Failed to create community');
-      console.error(err);
+      setError('Failed to create community')
+      console.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -70,8 +69,10 @@ const useCommunity = () => {
     setError(null)
     try {
       const response = await PUT(`/community/${community_id}`, updatedData)
-      setCommunities(prevCommunities => 
-        prevCommunities.map(community => (community.community_id === community_id ? response.data : community))
+      setCommunities((prevCommunities) =>
+        prevCommunities.map((community) =>
+          community.community_id === community_id ? response.community : community
+        )
       )
     } catch (err: any) {
       setError('Failed to update community')
@@ -86,7 +87,9 @@ const useCommunity = () => {
     setError(null)
     try {
       await DELETE(`/community/${community_id}`)
-      setCommunities(prevCommunities => prevCommunities.filter(community => community.community_id !== community_id))
+      setCommunities((prevCommunities) =>
+        prevCommunities.filter((community) => community.community_id !== community_id)
+      )
     } catch (err: any) {
       setError('Failed to delete community')
       console.error(err)
@@ -123,41 +126,39 @@ const useCommunity = () => {
     }
   }
 
-  const fetchAuthorByPageId = async (id:string) => {
-    setLoading(true);
-    setError(null);
+  const fetchAuthorByPageId = async (id: string) => {
+    setLoading(true)
+    setError(null)
     try {
-      const response = await GET(`/user/${id}`);
-      return response.username;
+      const response = await GET(`/user/${id}`)
+      return response.username
     } catch (err: any) {
-      setError('Failed to fetch author');
-      console.error(err);
+      setError('Failed to fetch author')
+      console.error(err)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-  
+  }
 
   useEffect(() => {
     getPendingPages()
-    fetchCommunities();
-
+    fetchCommunities()
   }, [])
 
-return {
-  communities,
-  loading,
-  error,
-  fetchCommunities,
-  createCommunity,
-  updateCommunityById,
-  deleteCommunityById,
-  pendingPages,
-  getPendingPages,
-  getCommunityById,
-  getPageById,
-  fetchAuthorByPageId,
+  return {
+    communities,
+    loading,
+    error,
+    fetchCommunities,
+    createCommunity,
+    updateCommunityById,
+    deleteCommunityById,
+    pendingPages,
+    getPendingPages,
+    getCommunityById,
+    getPageById,
+    fetchAuthorByPageId,
   }
 }
 
-export default useCommunity;
+export default useCommunity

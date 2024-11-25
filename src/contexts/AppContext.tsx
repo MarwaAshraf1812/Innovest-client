@@ -2,6 +2,8 @@ import { useEffect, useState, createContext, ReactNode } from 'react'
 import { autoLogin } from '@/API/AuthAPI'
 import { GET } from '@/API/axios'
 import { updateProfile } from '@/API/api'
+import { Community } from '@/hooks/useCommunity'
+import { Admin } from '@/hooks/useAdmins'
 
 interface User {
   id?: string
@@ -14,9 +16,9 @@ interface User {
   username: string
   country?: string
   national_id?: string
-  investment_preferences ?: string[]
-  user_languages ?: string[]
-  user_interests ?: string[]
+  investment_preferences?: string[]
+  user_languages?: string[]
+  user_interests?: string[]
   role: 'ADMIN' | 'SUPER_ADMIN' | 'INVESTOR' | 'ENTREPRENEUR'
 }
 
@@ -32,9 +34,9 @@ interface UserData {
   role?: string
   permissions?: string[]
   communities?: any[]
-  investment_preferences ?: string[]
-  user_languages ?: string[]
-  user_interests ?: string[]
+  investment_preferences?: string[]
+  user_languages?: string[]
+  user_interests?: string[]
 }
 
 interface AppContextType {
@@ -77,7 +79,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [isModerating, setIsModerating] = useState(false)
-  const [selectedRow, setSelectedRow] = useState<any>({})
+  const [selectedRow, setSelectedRow] = useState<Admin | User | Community>()
   console.log('userData:', userData)
   const [isLoading, setIsLoading] = useState(true)
 
@@ -154,7 +156,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         selectedRow,
         setSelectedRow,
         isModerating,
-        setIsModerating
+        setIsModerating,
       }}
     >
       {children}

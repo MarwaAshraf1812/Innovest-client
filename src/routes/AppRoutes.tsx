@@ -16,6 +16,9 @@ import Communities from '@/pages/AdminDashboard/Communities'
 import Members from '@/pages/AdminDashboard/Members'
 import ProfilePage from '@/pages/AdminDashboard/ProfilePage'
 import PlatformSettings from '@/pages/AdminDashboard/PlatformSettings'
+import Projects from '@/pages/EntrepreneurDashboard/Projects'
+import ProjectDetails from '@/pages/EntrepreneurDashboard/ProjectDetails'
+import ProjectForm from '@/components/forms/ProjectForm'
 
 const Router = createBrowserRouter([
   {
@@ -80,6 +83,8 @@ const Router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <EntrepreneurDashboard /> },
+      {path: 'projects', element: <Projects /> },
+      { path: 'projects/:id', element: <ProjectDetails /> },
       { path: 'profile', element: <ProfilePage /> },
     ],
   },

@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react'
-import { DELETE, GET, PUT } from '@/API/axios';
+import { DELETE, GET, PUT } from '@/API/axios'
 
 interface User {
-  id: string;
-  first_name: string;
-  last_name: string;
-  username: string;
-  email: string;
-  profile_image: string;
-  phone: string;
-  role: 'ENTREPRENEUR' | 'INVESTOR';
-  country: string;
-  permissions: string[];
-  is_verified: boolean;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  investment_preferences ?: string[]
-  user_languages ?: string[]
-  user_interests ?: string[]
+  id: string
+  first_name: string
+  last_name: string
+  username: string
+  email: string
+  profile_image: string
+  phone: string
+  role: 'ENTREPRENEUR' | 'INVESTOR'
+  country: string
+  permissions: string[]
+  is_verified: boolean
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  investment_preferences?: string[]
+  user_languages?: string[]
+  user_interests?: string[]
   [key: string]: any
 }
 
@@ -46,9 +46,8 @@ export const useUsers = () => {
     setError(null)
     try {
       const response = await PUT(`/user/${id}`, updatedData)
-      setUsers(prevUsers => 
-        prevUsers.map(user => (user.id === id ? response.data : user))
-      )
+      if (response)
+        setUsers((prevUsers) => prevUsers.map((user) => (user.id === id ? response.user : user)))
     } catch (err: any) {
       setError('Failed to update user')
       console.error(err)
@@ -62,7 +61,7 @@ export const useUsers = () => {
     setError(null)
     try {
       await DELETE(`/user/${id}`)
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== id))
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id))
     } catch (err: any) {
       setError('Failed to delete user')
       console.error(err)
@@ -71,14 +70,13 @@ export const useUsers = () => {
     }
   }
 
-
   const approveUserById = async (id: string) => {
     setLoading(true)
     setError(null)
     try {
       await PUT(`/user/approve-user/${id}`)
-      setUsers(prevUsers => 
-        prevUsers.map(user => (user.id === id ? { ...user, is_verified: true } : user))
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => (user.id === id ? { ...user, is_verified: true } : user))
       )
     } catch (err: any) {
       setError('Failed to approve user')
@@ -93,8 +91,8 @@ export const useUsers = () => {
     setError(null)
     try {
       await PUT(`/user/reject-user/${id}`)
-      setUsers(prevUsers => 
-        prevUsers.map(user => (user.id === id ? { ...user, is_verified: false } : user))
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => (user.id === id ? { ...user, is_verified: false } : user))
       )
     } catch (err: any) {
       setError('Failed to reject user')
@@ -116,6 +114,6 @@ export const useUsers = () => {
     updateUserById,
     deleteUserById,
     approveUserById,
-    rejectUserById
+    rejectUserById,
   }
 }

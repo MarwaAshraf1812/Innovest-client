@@ -1,17 +1,35 @@
+import React, { useState, useEffect } from 'react'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select"
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
+} from '@/components/ui/select'
 import { FaTimes } from 'react-icons/fa'
-import React, { useState } from 'react'
 
-const ProjectForm = ({ onClose }: { onClose: () => void }) => {
-  const [projectData, setProjectData] = useState({
+export interface ProjectFormType {
+  project_name?: string
+    description: string
+    field: string
+    budget: number
+    offer: number
+    target: number
+    deadline: string
+    visibility: boolean
+    files?: File[] | string[]
+}
+interface ProjectFormProps {
+  mode: 'add' | 'edit'
+  onClose: () => void
+  projectData?: ProjectFormType
+  onSubmit: (data: ProjectFormType) => Promise<void>
+}
+
+const ProjectForm: React.FC<ProjectFormProps> = ({ mode, onClose, projectData = {}, onSubmit }) => {
+  const [formData, setFormData] = useState<ProjectFormType>({
     project_name: '',
     description: '',
     field: '',
@@ -20,35 +38,36 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
     target: 0,
     deadline: '',
     visibility: false,
-    files: [] as File[],
+    files: [],
   })
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  useEffect(() => {
+    if (mode === 'edit' && projectData) {
+      setFormData({ ...projectData, files: projectData.files || [] } as ProjectFormType)
+    }
+  }, [mode, projectData])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setProjectData({ ...projectData, [name]: value })
+    setFormData({ ...formData, [name]: value })
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setProjectData({ ...projectData, files: Array.from(e.target.files) })
-    }
-  }
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setFormData({ ...formData, files: Array.from(e.target.files) })
+  //   }
+  // }
 
   const handleVisibilityChange = (value: string) => {
-    setProjectData({ ...projectData, visibility: value === 'true' })
-  }
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log(projectData)
+    setFormData({ ...formData, visibility: value === 'true' })
   }
 
   return (
-    <div className="w-full mx-auto p-4 bg-white rounded-lg shadow-md">
+    <div className="w-full mx-auto p-4 mt-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-main_blue">Create a New Project</h2>
+        <h2 className="text-2xl font-semibold text-main_blue">
+          {mode === 'add' ? 'Create a New Project' : 'Edit Project'}
+        </h2>
         <button
           type="button"
           onClick={onClose}
@@ -58,7 +77,10 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(formData);
+      }}>
         <div className="mb-4">
           <label
             htmlFor="project_name"
@@ -70,7 +92,7 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
             id="project_name"
             name="project_name"
             type="text"
-            value={projectData.project_name}
+            value={formData.project_name}
             onChange={handleChange}
             required
             className="mt-1"
@@ -87,10 +109,10 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
           <textarea
             id="description"
             name="description"
-            value={projectData.description}
+            value={formData.description}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="mt-1  px- block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           />
         </div>
 
@@ -105,86 +127,50 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
             id="field"
             name="field"
             type="text"
-            value={projectData.field}
+            value={formData.field}
             onChange={handleChange}
             required
             className="mt-1"
           />
         </div>
 
-        <div className='flex mb-4 w-full gap-3'>
-        <div className="w-1/2">
-          <label
-            htmlFor="budget"
-            className="block text-gray-700"
-          >
-            Budget
-          </label>
-          <Input
-            id="budget"
-            name="budget"
-            type="number"
-            value={projectData.budget}
-            onChange={handleChange}
-            required
-            className="mt-1"
-          />
-        </div>
-        <div className="w-1/2">
-          <label
-            htmlFor="deadline"
-            className="block text-gray-700"
-          >
-            Deadline
-          </label>
-          <Input
-            id="deadline"
-            name="deadline"
-            type="date"
-            value={projectData.deadline}
-            onChange={handleChange}
-            required
-            className="mt-1"
-          />
-        </div>
-        </div>
-        <div className='flex mb-4 w-full gap-3'>
-        <div className="w-1/2">
-          <label
-            htmlFor="offer"
-            className="block text-gray-700"
-          >
-            Offer
-          </label>
-          <Input
-            id="offer"
-            name="offer"
-            type="number"
-            value={projectData.offer}
-            onChange={handleChange}
-            className="mt-1"
-          />
-        </div>
+        <div className="flex mb-4 gap-3">
+          <div className="w-1/2">
+            <label
+              htmlFor="budget"
+              className="block text-gray-700"
+            >
+              Budget
+            </label>
+            <Input
+              id="budget"
+              name="budget"
+              type="number"
+              value={formData.budget}
+              onChange={handleChange}
+              required
+              className="mt-1"
+            />
+          </div>
 
-        <div className="w-1/2">
-          <label
-            htmlFor="target"
-            className="block text-gray-700"
-          >
-            Target Amount
-          </label>
-          <Input
-            id="target"
-            name="target"
-            type="number"
-            value={projectData.target}
-            onChange={handleChange}
-            className="mt-1"
-          />
+          <div className="w-1/2">
+            <label
+              htmlFor="deadline"
+              className="block text-gray-700"
+            >
+              Deadline
+            </label>
+            <Input
+              id="deadline"
+              name="deadline"
+              type="date"
+              value={formData.deadline}
+              onChange={handleChange}
+              required
+              className="mt-1"
+            />
+          </div>
         </div>
-        </div>
-
-        
 
         <div className="mb-4">
           <label
@@ -193,64 +179,18 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
           >
             Visibility
           </label>
-          <Select onValueChange={handleVisibilityChange}>
-            <SelectTrigger
-              id="visibility"
-              name="visibility"
-              className="mt-1 flex items-center justify-between border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+          <Select
+            onValueChange={handleVisibilityChange}
+            defaultValue={formData.visibility ? 'true' : 'false'}
+          >
+            <SelectTrigger className="mt-1">
               <SelectValue placeholder="Select visibility" />
             </SelectTrigger>
-            <SelectContent className="bg-white border border-gray-300 rounded-md shadow-lg mt-0">
-              <SelectItem
-                value="true"
-                className="p-2 hover:bg-blue-100"
-              >
-                Visible
-              </SelectItem>
-              <SelectItem
-                value="false"
-                className="p-2 hover:bg-blue-100"
-              >
-                Hidden
-              </SelectItem>
+            <SelectContent>
+              <SelectItem value="true">Visible</SelectItem>
+              <SelectItem value="false">Hidden</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="mb-4 flex gap-3">
-          <div>
-            <label
-              htmlFor="files"
-              className="block text-gray-700"
-            >
-              Project Propsals
-            </label>
-            <input
-              type="file"
-              id="files"
-              name="files"
-              onChange={handleFileChange}
-              multiple
-              className="mt-1 block w-full text-sm text-gray-700"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="files"
-              className="block text-gray-700"
-            >
-              National ID
-            </label>
-            <input
-              type="file"
-              id="files"
-              name="files"
-              onChange={handleFileChange}
-              multiple
-              className="mt-1 block w-full text-sm text-gray-700"
-            />
-          </div>
         </div>
 
         <div className="mb-4">
@@ -258,7 +198,7 @@ const ProjectForm = ({ onClose }: { onClose: () => void }) => {
             type="submit"
             className="w-full bg-blue-500 text-white hover:bg-blue-600"
           >
-            Create Project
+            {mode === 'add' ? 'Create Project' : 'Update Project'}
           </Button>
         </div>
       </form>

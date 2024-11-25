@@ -1,42 +1,53 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import clsx from "clsx";
-import { useContext, useState } from "react";
-import { IoClose } from "react-icons/io5";
-import { AppContext } from "@/contexts/AppContext";
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import clsx from 'clsx'
+import { useContext, useState } from 'react'
+import { IoClose } from 'react-icons/io5'
+import { AppContext } from '@/contexts/AppContext'
 
 interface Field {
-  name: string;
-  label: string;
-  type: 'text' | 'email' | 'password' | 'file' | 'select' | 'textarea' | 'checkbox' | 'number';
-  options?: string[];
-  required?: boolean;
+  name: string
+  label: string
+  type: 'text' | 'email' | 'password' | 'file' | 'select' | 'textarea' | 'checkbox' | 'number'
+  options?: string[]
+  required?: boolean
 }
 
 interface DynamicFormProps {
-  fields: Field[];
-  initialValues?: Record<string, any>;
-  onSubmit: (data: Record<string, any>) => Promise<void>;
+  fields: Field[]
+  initialValues?: Record<string, any>
+  onSubmit: (data: Record<string, any>) => Promise<void>
+  setIsEditing?: (isEditing: boolean) => void
 }
 
-const DynamicForm: React.FC<DynamicFormProps> = ({ fields, initialValues, onSubmit }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+const DynamicForm: React.FC<DynamicFormProps> = ({
+  fields,
+  initialValues,
+  onSubmit,
+  setIsEditing,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: initialValues || {},
-  });
-  const { setIsAdding, setIsEditing } = useContext(AppContext);
+  })
+  const { setIsAdding } = useContext(AppContext)
 
-  const [isFormVisible, setIsFormVisible] = useState(true);
+  const [isFormVisible, setIsFormVisible] = useState(true)
 
   const submitHandler: SubmitHandler<Record<string, any>> = async (data) => {
-    await onSubmit(data);
-  };
+    console.log(data)
+    await onSubmit({ ...data })
+  }
 
   const closeForm = () => {
-    setIsFormVisible(false);
-    setIsAdding(false);
-    setIsEditing(false);
-  };
+    setIsFormVisible(false)
+    setIsAdding(false)
+    setIsEditing?.(false)
+  }
 
   return (
     <>
@@ -50,9 +61,15 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ fields, initialValues, onSubm
             <IoClose size={24} />
           </button>
 
-          <form onSubmit={handleSubmit(submitHandler)} className="gap-2">
+          <form
+            onSubmit={handleSubmit((data) => submitHandler(data))}
+            className="gap-2"
+          >
             {fields.map((field) => (
-              <div key={field.name} className="flex flex-col mb-2">
+              <div
+                key={field.name}
+                className="flex flex-col mb-2"
+              >
                 <label className="font-semibold text-main_blue">{field.label}</label>
                 {field.type === 'select' ? (
                   <select
@@ -61,7 +78,10 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ fields, initialValues, onSubm
                   >
                     <option value="">Select {field.label}</option>
                     {field.options?.map((option) => (
-                      <option key={option} value={option}>
+                      <option
+                        key={option}
+                        value={option}
+                      >
                         {option}
                       </option>
                     ))}
@@ -80,6 +100,18 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ fields, initialValues, onSubm
                     />
                     <span className="ml-2">{field.label}</span>
                   </div>
+                ) : field.type === 'file' ? (
+                  <input
+                    {...register(field.name, {
+                      required: field.required,
+                      onChange: (e) => {
+                        const fileInput = e.target as HTMLInputElement;
+                        return fileInput.files ? fileInput.files[0] : null;
+                      },
+                    })}
+                    type="file"
+                    className={clsx('file', errors[field.name] && 'border-red-500')}
+                  />
                 ) : (
                   <Input
                     {...register(field.name, { required: field.required })}
@@ -92,14 +124,17 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ fields, initialValues, onSubm
                 )}
               </div>
             ))}
-            <Button type="submit" className="bg-main_blue text-white hover:bg-white hover:text-main_blue hover:border hover:border-main_blue">
+            <Button
+              type="submit"
+              className="bg-main_blue text-white hover:bg-white hover:text-main_blue hover:border hover:border-main_blue"
+            >
               Submit
             </Button>
           </form>
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default DynamicForm;
+export default DynamicForm

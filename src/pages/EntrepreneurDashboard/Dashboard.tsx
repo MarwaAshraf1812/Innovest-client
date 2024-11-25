@@ -3,7 +3,7 @@ import MetricsCard from '@/components/dashboards/MetricsCard/MetricsCard'
 import ProjectProposalFeed from '@/components/dashboards/ProjectProposalFeed/ProjectProposalFeed'
 import Recommendations from '@/components/dashboards/Recommendations/Recommendations'
 import UpcomingMeetingsSidebar from '@/components/dashboards/UpcomingMeetingsSidebar/UpcomingMeetingsSidebar'
-import ProjectForm from '@/components/forms/ProjectForm'
+import ProjectForm, { ProjectFormType } from '@/components/forms/ProjectForm'
 import { AppContext } from '@/contexts/AppContext'
 import { useContext, useState } from 'react'
 import { FaBriefcase, FaUsers, FaClipboardList } from 'react-icons/fa'
@@ -57,6 +57,10 @@ const EntrepreneurDashboard = () => {
     setIsFormVisible(false)
   } 
 
+  const handleSubmit = async (data: ProjectFormType): Promise<void> => {
+    setIsFormVisible(false)
+  }
+
   return (
     <div className='flex flex-col flex-1 mt-2 h-full'>
       <h1 className="text-3xl mb-4">
@@ -65,7 +69,11 @@ const EntrepreneurDashboard = () => {
       <div className='grid grid-cols-12 gap-3 flex-1'>
         {isFormVisible ? (
           <div className='col-span-12 lg:col-span-9 gap-3'>
-            <ProjectForm  onClose={handleCloseForm}/>
+            <ProjectForm
+              mode="add"
+              onClose={handleCloseForm}
+              onSubmit={handleSubmit}
+              />
           </div>
         ) : (
           <div className='col-span-12 lg:col-span-9 gap-3'>

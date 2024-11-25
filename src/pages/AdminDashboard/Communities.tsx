@@ -8,8 +8,13 @@ import DynamicForm from '@/components/forms/DynamicForm'
 import { communityFields } from '@/components/forms/formsConfig'
 const Communities = () => {
   const { communities, loading, createCommunity, updateCommunityById } = useCommunity()
-  const { isAdding, setIsAdding, isEditing, selectedRow, setSelectedRow, setIsEditing } =
-    useContext(AppContext)
+  const [isEditing, setIsEditing] = useState(false)
+  const {
+    isAdding,
+    setIsAdding,
+    selectedRow: selectedCommunity,
+    setSelectedRow: setSelectedCommunity,
+  } = useContext(AppContext)
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredCommunities, setFilteredCommunities] = useState(communities)
 
@@ -31,22 +36,8 @@ const Communities = () => {
     setIsAdding(false)
   }
 
-  const handleUpdateClick = async (row: any) => {
-    const community = communities?.find(
-      (community) => community?.community_id === row.community_id
-    )
-    
-    if (community) {
-      if (setSelectedRow) {
-        setSelectedRow(community)
-      }
-      console.log('Selected Community:', community)
-      setIsEditing(true)
-    }
-  }
-
   const handleUpdateCommunity = async (data: Record<string, any>) => {
-    await updateCommunityById(selectedRow.community_id, data)
+    await updateCommunityById(selectedCommunity.community_id, data)
     setIsEditing(false)
   }
 
@@ -74,7 +65,7 @@ const Communities = () => {
       </div>
       {isAdding && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Add New Community</h2>
+          <h2 className="text-3xl font-semibold text-main_blue">Add New Community</h2>
           <DynamicForm
             fields={communityFields}
             onSubmit={handleAddCommunity}
@@ -84,10 +75,11 @@ const Communities = () => {
 
       {isEditing && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Edit Community</h2>
+          <h2 className="text-3xl font-semibold text-main_blue">Edit Community</h2>
           <DynamicForm
             fields={communityFields}
-            initialData={selectedRow}
+            setIsEditing={setIsEditing}
+            initialValues={selectedCommunity}
             onSubmit={handleUpdateCommunity}
           />
         </div>
@@ -104,7 +96,10 @@ const Communities = () => {
             data={filteredCommunities || []}
             loading={loading}
             rowKey="community_id"
-            updateData={(row) => handleUpdateClick(row)}
+            updateData={(community) => {
+              setSelectedCommunity?.(community)
+              setIsEditing(true)
+            }}
           />
         </div>
       )}
