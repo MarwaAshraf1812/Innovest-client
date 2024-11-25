@@ -49,6 +49,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ type }) => {
     navigate(`/${type}-dashboard/profile`)
   }
 
+  const handleEditProfile = () => {
+    navigate(`/${type}-dashboard/profile`)
+  }
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -133,7 +137,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ type }) => {
                     </li>
                     <li
                       className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={handleEdit}
+                      onClick={handleEditProfile}
                     >
                       Edit Profile
                     </li>
