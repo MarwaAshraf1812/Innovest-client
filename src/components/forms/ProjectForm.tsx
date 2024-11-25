@@ -11,7 +11,7 @@ import {
 import { FaTimes } from 'react-icons/fa'
 
 export interface ProjectFormType {
-  project_name: string
+  project_name?: string
     description: string
     field: string
     budget: number
@@ -28,7 +28,7 @@ interface ProjectFormProps {
   onSubmit: (data: ProjectFormType) => Promise<void>
 }
 
-const ProjectForm: React.FC<ProjectFormProps> = ({ mode, onClose, projectData, onSubmit }) => {
+const ProjectForm: React.FC<ProjectFormProps> = ({ mode, onClose, projectData = {}, onSubmit }) => {
   const [formData, setFormData] = useState<ProjectFormType>({
     project_name: '',
     description: '',
@@ -43,7 +43,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ mode, onClose, projectData, o
 
   useEffect(() => {
     if (mode === 'edit' && projectData) {
-      setFormData({ ...projectData, files: projectData.files || [] })
+      setFormData({ ...projectData, files: projectData.files || [] } as ProjectFormType)
     }
   }, [mode, projectData])
 
