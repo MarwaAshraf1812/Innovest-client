@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'
 import Table from '@/components/common/Table/Table'
-import useAdmins from '@/hooks/useAdmins'
+import useAdmins, { Admin } from '@/hooks/useAdmins'
 import { Button } from '@/components/ui/button'
 import { AppContext } from '@/contexts/AppContext'
 import { Input } from '@/components/ui/input'
@@ -8,15 +8,21 @@ import DynamicForm from '@/components/forms/DynamicForm'
 import { adminFields } from '@/components/forms/formsConfig'
 
 const Admins = () => {
+  const [isEditing, setIsEditing] = useState(false)
   const { admins, loading, createAdmin, updateAdminById } = useAdmins()
-  const { user, isAdding, setIsAdding, isEditing, selectedRow, setSelectedRow, setIsEditing } =
-    useContext(AppContext)
+  const {
+    user,
+    isAdding,
+    setIsAdding,
+    selectedRow: selectedAdmin,
+    setSelectedRow: setSelctedAdmin,
+  } = useContext(AppContext)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredAdmins, setFilteredAdmins] = useState(admins)
+  const [filteredAdmins, setFilteredAdmins] = useState<Admin[]>(admins)
 
   const isSuperAdmin = user?.role === 'SUPER_ADMIN'
 
-  useEffect(() => {
+  const filterAdmins = () => {
     const filtered = admins.filter(
       (admin) =>
         (admin.username?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
@@ -27,6 +33,10 @@ const Admins = () => {
         false
     )
     setFilteredAdmins(filtered)
+  }
+
+  useEffect(() => {
+    filterAdmins()
   }, [searchQuery, admins])
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,19 +48,8 @@ const Admins = () => {
     setIsAdding(false)
   }
 
-  const handleUpdateClick = (row: any) => {
-    const admin = admins.find((admin) => admin.admin_id === row.admin_id)
-    if (admin) {
-      if (setSelectedRow) {
-        setSelectedRow(admin)
-      }
-      setIsEditing(true)
-      console.log('Selected Admin: ', admin)
-    }
-  }
-
-  const handleUPdateAdmin = async (data: Record<string, any>) => {
-    await updateAdminById(selectedRow.admin_id, data)
+  const handleUpdateAdmin = async (data: Record<string, any>) => {
+    await updateAdminById(selectedAdmin.admin_id, data)
     setIsEditing(false)
   }
   if (!admins) {
@@ -94,8 +93,9 @@ const Admins = () => {
           <h2 className="text-2xl font-semibold text-center text-main_blue">Edit Admin</h2>
           <DynamicForm
             fields={adminFields}
-            onSubmit={handleUPdateAdmin}
-            initialData={selectedRow}
+            onSubmit={handleUpdateAdmin}
+            initialValues={selectedAdmin}
+            setIsEditing={setIsEditing}
           />
         </div>
       )}
@@ -112,7 +112,10 @@ const Admins = () => {
             data={filteredAdmins}
             loading={loading}
             rowKey="admin_id"
-            updateData={(row) => handleUpdateClick(row)}
+            updateData={(admin) => {
+              setSelctedAdmin?.(admin)
+              setIsEditing(true)
+            }}
           />
         </div>
       )}

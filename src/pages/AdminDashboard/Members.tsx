@@ -2,15 +2,16 @@ import { useState, useEffect, useContext } from 'react'
 import Table from '@/components/common/Table/Table'
 import { useUsers } from '@/hooks/useUsers'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { AppContext } from '@/contexts/AppContext'
 import DynamicForm from '@/components/forms/DynamicForm'
 import { userFields } from '@/components/forms/formsConfig'
 
 const Members = () => {
+  const [isEditing, setIsEditing] = useState(false)
+
   const { users, loading, deleteUserById, updateUserById } = useUsers()
   const [searchQuery, setSearchQuery] = useState('')
-  const { isEditing, selectedRow, setSelectedRow, setIsEditing } = useContext(AppContext)
+  const { selectedRow: selectedMember, setSelectedRow: setSelectedMember } = useContext(AppContext)
   const [filteredUsers, setFilteredUsers] = useState(users)
 
   useEffect(() => {
@@ -27,19 +28,8 @@ const Members = () => {
     setSearchQuery(e.target.value)
   }
 
-  const handleUpdateClick = (row: any) => {
-    const user = users.find((user) => user.id === row.id)
-    if (user) {
-      if (setSelectedRow) {
-        setSelectedRow(user)
-      }
-      setIsEditing(true)
-      console.log("Selected User: ", user)
-    }
-  }
-
   const handleUpdateUser = async (data: Record<string, any>) => {
-    await updateUserById(selectedRow.id, data)
+    await updateUserById(selectedMember.id, data)
     setIsEditing(false)
   }
 
@@ -63,8 +53,17 @@ const Members = () => {
           <h2 className="text-2xl font-semibold text-center text-main_blue">Edit Community</h2>
           <DynamicForm
             fields={userFields}
-            initialValues={selectedRow}
+            initialValues={{
+              first_name: selectedMember.first_name,
+              last_name: selectedMember.last_name,
+              username: selectedMember.username,
+              email: selectedMember.email,
+              role: selectedMember.role,
+              country: selectedMember.country,
+              phone: selectedMember.phone,
+            }}
             onSubmit={handleUpdateUser}
+            setIsEditing={setIsEditing}
           />
         </div>
       )}
@@ -81,7 +80,10 @@ const Members = () => {
             loading={loading}
             rowKey="id"
             deleteData={deleteUserById}
-            updateData={(row) => handleUpdateClick(row)}
+            updateData={(member) => {
+              setSelectedMember?.(member)
+              setIsEditing(true)
+            }}
           />
         </div>
       )}
