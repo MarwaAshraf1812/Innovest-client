@@ -5,7 +5,7 @@ interface OverviewCardProps {
   color: string;
   title: string;
   icon: IconType;
-  percentage: string;
+  percentage?: string;
 }
 
 const OverviewCard: React.FC<OverviewCardProps> = ({ color, title, icon: Icon, percentage }) => {
