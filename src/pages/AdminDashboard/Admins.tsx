@@ -80,7 +80,7 @@ const Admins = () => {
       </div>
       {isAdding && !isEditing && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Add New Admin</h2>
+          <h2 className="text-3xl font-semibold text-main_blue">Add New Admin</h2>
           <DynamicForm
             fields={adminFields}
             onSubmit={handleAddAdmin}
@@ -90,7 +90,7 @@ const Admins = () => {
 
       {isEditing && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Edit Admin</h2>
+          <h2 className="text-3xl font-semibold text-main_blue">Edit Admin</h2>
           <DynamicForm
             fields={adminFields}
             onSubmit={handleUpdateAdmin}

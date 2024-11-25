@@ -43,14 +43,11 @@ const Members = () => {
           placeholder="Search by username, email, or role"
           className="border border-gray-300 rounded p-5 w-1/2"
         />
-        {/* <Button
-          className="bg-main_blue text-white hover:bg-white hover:text-main_blue hover:border hover:border-main_blue"
-          ><span className="text-lg">Add New User</span></Button> */}
       </div>
 
       {isEditing && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Edit Community</h2>
+          <h2 className="text-3xl font-semibold  text-main_blue">Edit Member</h2>
           <DynamicForm
             fields={userFields}
             initialValues={{

@@ -35,6 +35,7 @@ export const communityFields: Field[] = [
 ]
 
 export const userFields: Field[] = [
+  { name: 'username', label: 'Username', type: 'text', required: true },
   { name: 'first_name', label: 'First Name', type: 'text', required: true },
   { name: 'last_name', label: 'Last Name', type: 'text', required: true },
   { name: 'email', label: 'Email', type: 'email', required: true },

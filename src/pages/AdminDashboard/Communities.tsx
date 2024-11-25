@@ -65,7 +65,7 @@ const Communities = () => {
       </div>
       {isAdding && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Add New Community</h2>
+          <h2 className="text-3xl font-semibold text-main_blue">Add New Community</h2>
           <DynamicForm
             fields={communityFields}
             onSubmit={handleAddCommunity}
@@ -75,7 +75,7 @@ const Communities = () => {
 
       {isEditing && (
         <div className="mt-4">
-          <h2 className="text-2xl font-semibold text-center text-main_blue">Edit Community</h2>
+          <h2 className="text-3xl font-semibold text-main_blue">Edit Community</h2>
           <DynamicForm
             fields={communityFields}
             setIsEditing={setIsEditing}
