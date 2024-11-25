@@ -18,7 +18,7 @@ import ProfilePage from '@/pages/AdminDashboard/ProfilePage'
 import PlatformSettings from '@/pages/AdminDashboard/PlatformSettings'
 import Projects from '@/pages/EntrepreneurDashboard/Projects'
 import ProjectDetails from '@/pages/EntrepreneurDashboard/ProjectDetails'
-import ProjectForm from '@/components/forms/ProjectForm'
+import Investments from '@/pages/EntrepreneurDashboard/Investments'
 
 const Router = createBrowserRouter([
   {
@@ -85,6 +85,7 @@ const Router = createBrowserRouter([
       { path: '', element: <EntrepreneurDashboard /> },
       {path: 'projects', element: <Projects /> },
       { path: 'projects/:id', element: <ProjectDetails /> },
+      { path: 'investments', element: <Investments /> },
       { path: 'profile', element: <ProfilePage /> },
     ],
   },
