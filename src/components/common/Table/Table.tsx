@@ -15,13 +15,16 @@ interface TableProps {
 
 const Table: React.FC<TableProps> = ({ columns = [], rowKey, data = [], loading, updateData, deleteData }) => {
   const location = useLocation();
-  const { isModerating } = useContext(AppContext);
+  const { isPendingMode} = useContext(AppContext);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = currentPage * pageSize;
 
-  const slicedData = location.pathname === '/admin-dashboard' ? (data || []).slice(0, 4) : data.slice(startIndex, endIndex);
+  const slicedData = Array.isArray(data) && location.pathname !== '/admin-dashboard'
+  ? data.slice(startIndex, endIndex)
+  : (Array.isArray(data) ? data.slice(0, 4) : []);
+
   const isAdminDashboard = location.pathname === '/admin-dashboard';
 
   const columnsToDisplay = isAdminDashboard ? columns : [...columns, { label: 'Actions', field: 'actions' }];
@@ -60,13 +63,13 @@ const Table: React.FC<TableProps> = ({ columns = [], rowKey, data = [], loading,
                           className="px-4 py-2 bg-green-500 text-white rounded mr-2 my-2"
                           onClick={() => updateData && updateData(row)}
                         >
-                          Update
+                          {isPendingMode ? 'Approve' : 'Update'}
                         </button>
                         <button
                           className="px-4 py-2 bg-red-500 text-white rounded"
                           onClick={() => deleteData && deleteData(row)}
                         >
-                          Delete
+                          {isPendingMode ? 'Reject' : 'Delete'}
                         </button>
                       </div>
                     ) : (

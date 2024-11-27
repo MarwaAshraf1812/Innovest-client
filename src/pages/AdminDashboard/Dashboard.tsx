@@ -10,7 +10,7 @@ import { useUsers } from '@/hooks/useUsers'
 import useCommunity from '@/hooks/useCommunity'
 
 const AdminDashboard: React.FC = () => {
-  const { userData, setIsModerating } = useContext(AppContext)
+  const { userData, setIsModerating, setIsPendingMode } = useContext(AppContext)
   const { users, loading, approveUserById, rejectUserById } = useUsers()
   const { pendingPages, getCommunityById, fetchAuthorByPageId, getPageById } = useCommunity()
   const [isModeratingUsers, setIsModeratingUsers] = useState(false)
@@ -27,6 +27,7 @@ const AdminDashboard: React.FC = () => {
   const handleModerateNewUsersClick = () => {
     setIsModeratingUsers(true)
     setIsModerating(true)
+    setIsPendingMode(true)
   }
 
   const getPageDetails = async () => {

@@ -19,6 +19,10 @@ import PlatformSettings from '@/pages/AdminDashboard/PlatformSettings'
 import Projects from '@/pages/EntrepreneurDashboard/Projects'
 import ProjectDetails from '@/pages/EntrepreneurDashboard/ProjectDetails'
 import Investments from '@/pages/EntrepreneurDashboard/Investments'
+import CommunitiesPage from '@/pages/EntrepreneurDashboard/CommunitiesPage'
+import PendingUsers from '@/pages/AdminDashboard/PendingUsers'
+import { ToastContainer } from 'react-toastify'
+import CommunityDiscussion from '@/components/dashboards/Communities/CommunityDiscussion'
 
 const Router = createBrowserRouter([
   {
@@ -70,8 +74,8 @@ const Router = createBrowserRouter([
       { path: 'communities', element: <Communities /> },
       { path: 'profile', element: <ProfilePage /> },
       { path: 'members', element: <Members /> },
+      { path: 'pending-users', element: <PendingUsers /> },
       { path: 'settings', element: <PlatformSettings /> },
-
     ],
   },
   {
@@ -83,10 +87,12 @@ const Router = createBrowserRouter([
     ),
     children: [
       { path: '', element: <EntrepreneurDashboard /> },
-      {path: 'projects', element: <Projects /> },
+      { path: 'projects', element: <Projects /> },
       { path: 'projects/:id', element: <ProjectDetails /> },
       { path: 'investments', element: <Investments /> },
       { path: 'profile', element: <ProfilePage /> },
+      { path: 'communities', element: <CommunitiesPage /> },
+      { path: 'communities/:communityId/discussion', element: <CommunityDiscussion /> },
     ],
   },
   {
@@ -114,6 +120,7 @@ const Router = createBrowserRouter([
 const AppRouters = () => {
   return (
     <AppProvider>
+      <ToastContainer/>
       <RouterProvider router={Router} />
     </AppProvider>
   )

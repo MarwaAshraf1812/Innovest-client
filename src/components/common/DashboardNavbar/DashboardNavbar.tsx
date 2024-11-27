@@ -34,29 +34,30 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
       { name: 'Admins', path: '/admin-dashboard/admins', icon: <FaUserShield /> },
       { name: 'Members', path: '/admin-dashboard/members', icon: <FaUsers /> },
       { name: 'Communities', path: '/admin-dashboard/communities', icon: <FaNetworkWired /> },
+      { name: 'PendingUsers', path: '/admin-dashboard/pending-users', icon: <FaUsers /> },
       { name: 'Settings', path: '/admin-dashboard/settings', icon: <FaCog /> },
     ],
     ENTREPRENEUR: [
       { name: 'Dashboard', path: '/entrepreneur-dashboard', icon: <FaTachometerAlt /> },
       { name: 'Projects', path: '/entrepreneur-dashboard/projects', icon: <FaProjectDiagram /> },
-      {
-        name: 'Investments',
-        path: '/entrepreneur-dashboard/investments',
-        icon: <FaHandHoldingUsd />,
-      },
-      { name: 'Connections', path: '/entrepreneur-dashboard/connections', icon: <FaUserFriends /> },
-      { name: 'Settings', path: '/entrepreneur-dashboard/settings', icon: <FaCog /> },
+      { name: 'Investments', path: '/entrepreneur-dashboard/investments', icon: <FaHandHoldingUsd />},
+      { name: 'Communities', path: '/entrepreneur-dashboard/communities', icon: <FaUserFriends /> },
+      // { name: 'Connections', path: '/entrepreneur-dashboard/connections', icon: <FaUserFriends /> },
     ],
     INVESTOR: [
       { name: 'Dashboard', path: '/investor-dashboard', icon: <FaTachometerAlt /> },
       { name: 'Portfolio', path: '/investor-dashboard/portfolio', icon: <FaBriefcase /> },
       { name: 'Opportunities', path: '/investor-dashboard/opportunities', icon: <FaLightbulb /> },
-      { name: 'Connections', path: '/investor-dashboard/connections', icon: <FaUserFriends /> },
-      { name: 'Settings', path: '/investor-dashboard/settings', icon: <FaCog /> },
+      { name: 'Communities', path: '/investor-dashboard/communities', icon: <FaUserFriends /> },
+      // { name: 'Settings', path: '/investor-dashboard/settings', icon: <FaCog /> },
     ],
     SUPER_ADMIN: [
       { name: 'Dashboard', path: '/super-admin-dashboard', icon: <FaTachometerAlt /> },
-      { name: 'Settings', path: '/super-admin-dashboard/settings', icon: <FaCog /> },
+      { name: 'Admins', path: '/admin-dashboard/admins', icon: <FaUserShield /> },
+      { name: 'Members', path: '/admin-dashboard/members', icon: <FaUsers /> },
+      { name: 'Communities', path: '/admin-dashboard/communities', icon: <FaNetworkWired /> },
+      { name: 'PendingUsers', path: '/admin-dashboard/pending-users', icon: <FaUsers /> },
+      { name: 'Settings', path: '/admin-dashboard/settings', icon: <FaCog /> },
     ],
   }
 
@@ -77,7 +78,6 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
           <DashboardNavbarItem
             key={item.name}
             path={item.path}
-           
             icon={item.icon}
             name={item.name}
           />

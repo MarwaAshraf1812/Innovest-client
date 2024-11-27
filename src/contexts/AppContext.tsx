@@ -24,6 +24,7 @@ interface User {
 
 interface UserData {
   admin_id?: string
+  id?: string
   first_name?: string
   last_name?: string
   username?: string
@@ -54,6 +55,12 @@ interface AppContextType {
   setIsEditing: (isEditing: boolean) => void
   isModerating: boolean
   setIsModerating: (isModerating: boolean) => void
+  isPendingMode: boolean
+  setIsPendingMode: (isPendingMode: boolean) => void
+  pendingRequests: string[]
+  setPendingRequests: (requests: string[]) => void;
+  communityData: Community[]
+  setCommunityData: (community: Community[]) => void
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -71,6 +78,12 @@ export const AppContext = createContext<AppContextType>({
   setSelectedRow: () => {},
   isModerating: false,
   setIsModerating: () => {},
+  isPendingMode: false,
+  setIsPendingMode: () => {},
+  pendingRequests: [],
+  setPendingRequests: () => {},
+  communityData: [],
+  setCommunityData: () => {},
 })
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
@@ -80,8 +93,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [isAdding, setIsAdding] = useState(false)
   const [isModerating, setIsModerating] = useState(false)
   const [selectedRow, setSelectedRow] = useState<Admin | User | Community>()
-  console.log('userData:', userData)
+  const [isPendingMode, setIsPendingMode] = useState(false); 
   const [isLoading, setIsLoading] = useState(true)
+  const [pendingRequests, setPendingRequests] = useState<string[]>([])
+  const [communityData, setCommunityData] = useState<Community[]>([])
 
   const fetchUserData = async () => {
     if (!user) return
@@ -135,10 +150,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }
 
   useEffect(() => {
+    
     if (!user) {
       saveUser()
     }
-  }, [])
+  }, []);
 
   return (
     <AppContext.Provider
@@ -157,6 +173,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setSelectedRow,
         isModerating,
         setIsModerating,
+        isPendingMode,
+        setIsPendingMode,
+        pendingRequests,
+        setPendingRequests,
+        communityData,
+        setCommunityData,
       }}
     >
       {children}

@@ -56,6 +56,20 @@ export const useUsers = () => {
     }
   }
 
+  const getUserById = async (id: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await GET(`/user/${id}`)
+      return response
+    } catch (err: any) {
+      setError('Failed to fetch user')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const deleteUserById = async (id: string) => {
     setLoading(true)
     setError(null)
@@ -115,5 +129,6 @@ export const useUsers = () => {
     deleteUserById,
     approveUserById,
     rejectUserById,
-  }
+    getUserById
+    }
 }
